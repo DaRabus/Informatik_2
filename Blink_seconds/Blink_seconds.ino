@@ -12,6 +12,9 @@
 int ledPins[] = {8, 9, 10, 11};
 int inPin = 12; // Button Input
 int ledState = LOW;
+   unsigned long time_start; 
+   long intervall = 1000; 
+   unsigned long time_now; 
 
 Bounce debouncer = Bounce(); // Instantiate a Bounce object
 
@@ -27,24 +30,18 @@ void setup() {
     digitalWrite(ledPins[i],ledState);
   }
 
-   
-
 }
 
 void loop() {
-
-   unsigned long time_start; 
-   unsigned long time_now; 
-   long intervall = 1000; 
-
-   debouncer.update(); // Update the Bounce instance
    time_start = millis();
+   debouncer.update(); // Update the Bounce instance
 
-   if ( debouncer.fell() ) {
+   
+   if ( debouncer.fell() ) { //Take timestamp for Button pressed
     time_now=millis();
     }
-   
-   if(time_start-time_now == intervall){
+
+if(time_start-time_now == intervall){
       ledState = !ledState; // Toggle LED state
       for (byte i = 0; i < 4; i++) {
       digitalWrite(ledPins[i],ledState);
@@ -53,8 +50,11 @@ void loop() {
       ledState = !ledState; // Toggle LED state
       for (byte i = 0; i < 4; i++) {
       digitalWrite(ledPins[i],ledState);
+      time_now = time_start;
       }
-   }
+      
+}
+   
    }
 
    

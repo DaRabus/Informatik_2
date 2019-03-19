@@ -16,18 +16,15 @@ int ledState = LOW;
 Bounce debouncer = Bounce(); // Instantiate a Bounce object
 
 
-void setup() {
-   Serial.begin(9600); 
-  // put your setup code here, to run once:
-  debouncer.attach(inPin,INPUT_PULLUP);
-  debouncer.interval(25); // Use a debounce interval of 25 milliseconds
+void setup() { // put your setup code here, to run once:
+   Serial.begin(9600); //Serial Monitor Start
+   debouncer.attach(inPin,INPUT_PULLUP); //Debouncing
+   debouncer.interval(25); // Use a debounce interval of 25 milliseconds
   //Declaring the pins as a Output
   for (byte i = 0; i < 4; i++) {
-    pinMode(ledPins[i], OUTPUT);
-    digitalWrite(ledPins[i],ledState);
+  pinMode(ledPins[i], OUTPUT);
+  digitalWrite(ledPins[i],ledState);
   }
-
-   
 
 }
 
