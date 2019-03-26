@@ -6,31 +6,31 @@
   ******************************/
 #include <Bounce2.h>
 #include <avr/io.h>
+#include <ResponsiveAnalogRead.h>
 
+
+
+int potPin = 0; //Potentioneter Pin
 int ledPins[] = {8, 9, 10, 11};
 int inPin = 12; // Button Input
 int ledState = LOW;
-int ms = 0;
-int s;
-int mint;
+
+ResponsiveAnalogRead analog(potPin, true);
 Bounce debouncer = Bounce(); // Instantiate a Bounce object
 
 void setup() {
-  Serial.begin(115200);
-  // put your setup code here, to run once:
-debouncer.attach(inPin,INPUT_PULLUP);
+
+  
+  Serial.begin(115200); //Monitoring
+
+  
+debouncer.attach(inPin,INPUT_PULLUP); //Debouncing pins
 debouncer.interval(25); // Use a debounce interval of 25 milliseconds
   for (byte i = 0; i < 4; i++) {
-    pinMode(ledPins[i], OUTPUT);
-    digitalWrite(ledPins[i],ledState);
-  }
-
-noInterrupts();           // Alle Interrupts temporär abschalten
- TCCR1A = 0;
-OCR1A = 16000;
-TCCR1B = 0B00001001;       // CS00 als 1 als Prescale-Wert spezifizieren und WGM02 aktivieren
-TIMSK1 = 0B00000010; // Timer Compare Interrupt aktivieren
-interrupts();             // alle Interrupts scharf schalten
+    pinMode(ledPins[i], OUTPUT); //set pins as output
+    digitalWrite(ledPins[i],ledState); //activate pins
+  } 
+         
 
  
   /*
@@ -46,17 +46,7 @@ interrupts();             // alle Interrupts scharf schalten
 
 
 }
-ISR(TIMER1_COMPA_vect)  {
-   ms++;
-  if(ms==1000){
-    ms = 0;
-    s++;
-  }
-   if(s==60){
-    s=0;
-    mint++;
-   }
-    }
+
 
 void loop() {
   // put your main code here, to run repeatedly:
@@ -67,8 +57,9 @@ if ( debouncer.fell() ) { //Take timestamp for Button pressed
       digitalWrite(ledPins[i],ledState);
       }
     }
-
-Serial.println(String(mint) + " Minuten " + String(s) + " Sekunden " + String(ms) + "  Millisekunden");
+analog.update(); //Debounce Analog Signal
+    
+Serial.println(analog.getValue());          // debug value
 
 }
 
